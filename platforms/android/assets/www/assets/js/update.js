@@ -1,4 +1,4 @@
-db = window.openDatabase("FieldBook", "1.0", "FieldBook", 200000);
+db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
 
 //var __URL = "http://159.203.212.59/field/files/php/scripts/app/";
 //var __URL = "http://localhost/versioned/software/field/admin/files/php/scripts/app/";
@@ -6,7 +6,7 @@ db = window.openDatabase("FieldBook", "1.0", "FieldBook", 200000);
 var __URL = localStorage.getItem('url')+"files/php/scripts/app/";
 
 local = false;
-if(!local){   
+if(!local){
     var isOffline = 'onLine' in navigator && !navigator.onLine;
     if (isOffline) {
         log("There's no Internet conection")
@@ -40,12 +40,14 @@ sql = "CREATE TABLE IF NOT EXISTS Registro ( " +
     "variable INTEGER, " +
     "status INTEGER, " +
     "updated INTEGER, " +
-    "valor TEXT)"
+    "valor TEXT, " +
+    "latitude VARCHAR(100), " +
+    "longitude VARCHAR(100)) "
     tx.executeSql(sql);
 
     var sql = "SELECT Registro.*, Variable.tipoCampo FROM Registro, Variable WHERE Registro.variable = Variable.id AND updated = '0' AND status = '1'";
     var items = new Array();
-    tx.executeSql(sql, [], 
+    tx.executeSql(sql, [],
         function(tx2, results) {
             var len = results.rows.length;
             log("Uploading " + len + " record/s");
@@ -212,7 +214,7 @@ tx.executeSql(sql);
 sql = "CREATE TABLE IF NOT EXISTS Parcela ( " +
     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
     "libroCampo INTEGER," +
-    "numero INTEGER)" 
+    "numero INTEGER)"
 tx.executeSql(sql);
 
 sql = "CREATE TABLE IF NOT EXISTS Variable ( " +
@@ -242,7 +244,9 @@ sql = "CREATE TABLE IF NOT EXISTS Registro ( " +
     "variable INTEGER, " +
     "status INTEGER, " +
     "updated INTEGER, " +
-    "valor TEXT)"
+    "valor TEXT, " +
+    "latitude VARCHAR(100), " +
+    "longitude VARCHAR(100)) "
 tx.executeSql(sql);
 
 sql = "CREATE TABLE IF NOT EXISTS InfoEnsayo ( " +
@@ -466,7 +470,8 @@ function updateUserLibroCampo(items, callback) {
 }
 
 function txErrorHandler(tx) {
-    $.growl.error({ title: "Info.", message: "Update error" });
+  console.log(tx);
+    $.growl.error({ title: "Info.", message: "Update error" + tx });
 }
 
 var countDone = 0;

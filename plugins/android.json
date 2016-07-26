@@ -58,7 +58,14 @@
         },
         "cordova-plugin-audio-recorder-api": {
             "PACKAGE_NAME": "manolo.field"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "manolo.field"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "manolo.field"
+        }
+    }
 }

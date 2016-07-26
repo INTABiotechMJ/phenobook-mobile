@@ -1,12 +1,12 @@
 
-db = window.openDatabase("FieldBook", "1.0", "FieldBook", 200000);
+db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
 
 //fill in options
 var opciones = [];
 db.transaction(
 	function(tx) {
 		var sql = "SELECT id, nombre, tipoCampo, nombreOriginal FROM Variable WHERE libroCampo = '" + localStorage.getItem('ensayo') + "'";
-		tx.executeSql(sql, [], 
+		tx.executeSql(sql, [],
 			function(tx, results) {
 				var len = results.rows.length;
 				i = 0;
@@ -17,7 +17,7 @@ db.transaction(
 						//OPCIONES
 						//TODO OPCIONES EN ARRAY
 						var sql = "SELECT * FROM Opcion WHERE variable = '" + item.id + "'";
-						tx.executeSql(sql, [], 
+						tx.executeSql(sql, [],
 							function(tx, results) {
 								var len = results.rows.length;
 								//$("select.valor").html("");
@@ -25,19 +25,19 @@ db.transaction(
 								for (var i=0; i<len; i++){
 									var opcion = results.rows.item(i);
 									opciones.push(opcion);
-									
+
 								//	$("select.valor").append("<option value='" + opcion.id + "'>" +  opcion.nombre + "</option>")
 								//	if(opcion.opcionDefecto == "1"){
 							//			$('select.valor option:last').attr('selected', 'selected');
 							//		}
 						}
-					});                   
+					});
 					//}
 				}
 				var tipoCampo = $('#variable option:selected').data("tipocampo");
 				$(".valor").removeClass("selected");
 				$("*[data-tipocampo='" + tipoCampo + "']").removeClass("hide");
-				$("*[data-tipocampo='" + tipoCampo + "']").addClass("selected");				
+				$("*[data-tipocampo='" + tipoCampo + "']").addClass("selected");
 				loadParcelas();
 			});
 
@@ -51,7 +51,7 @@ function loadParcelas(){
 	db.transaction(
 		function(tx) {
 			sql = "SELECT id, numero FROM Parcela WHERE libroCampo = '" + localStorage.getItem('ensayo') + "'";
-			tx.executeSql(sql, [], 
+			tx.executeSql(sql, [],
 				function(tx, results) {
 					var len = results.rows.length;
 					i = 0;
@@ -106,7 +106,7 @@ $("#next-var").click(function(){
 });
 
 $("#prev-var").click(function(){
-	
+
 	save(function (){
 		$('#variable option:selected').prev().prop('selected', true);
 		var tipoCampo = $('#variable option:selected').data("tipocampo");
@@ -174,11 +174,11 @@ function save(callback){
 			tx.executeSql(sql, params);
 
 			var sql = " INSERT INTO Registro " +
-			" (user, valor, parcela, variable, status, updated, localStamp) " +
-			" VALUES (?, ?, ?,?, '1', '0', DATETIME('now')) ";
-			var params = [localStorage.getItem('user'), value, parcela, variable];
+			" (user, valor, parcela, variable, status, updated, localStamp, latitude, longitude) " +
+			" VALUES (?, ?, ?,?, '1', '0', DATETIME('now'), ?, ?) ";
+			var params = [localStorage.getItem('user'), value, parcela, variable, localStorage.getItem('latitude'), localStorage.getItem('longitude')];
 			tx.executeSql(sql, params);
-			
+
 			$(".update-container").html("Actualizado");
 			clearTimeout(tout)
 			tout = setTimeout(function() {
@@ -208,7 +208,7 @@ function updateValor(){
 	db.transaction(
 		function(tx) {
 			var sql = "SELECT Registro.valor, Registro.updated, Variable.tipoCampo FROM Registro, Variable WHERE Registro.status = '1' AND Registro.variable = Variable.id AND parcela = '" + parcela + "' AND variable = '" + variable + "'";
-			tx.executeSql(sql, [], 
+			tx.executeSql(sql, [],
 				function(tx, results) {
 					var count = results.rows.length;
 					if(count > 0){
@@ -237,7 +237,7 @@ function updateValor(){
 				);
 			var sql = "SELECT InfoEnsayo.nombre, ValorInfoEnsayo.valor FROM InfoEnsayo, ValorInfoEnsayo WHERE parcela = '" + parcela + "' AND ValorInfoEnsayo.infoEnsayo = InfoEnsayo.id";
 			var items = new Array();
-			tx.executeSql(sql, [], 
+			tx.executeSql(sql, [],
 				function(tx, results) {
 					var len = results.rows.length;
 					str = "";
@@ -247,7 +247,7 @@ function updateValor(){
 					}
 					$(".info-ensayo").html(str);
 
-				}); 
+				});
 
 		}, txErrorHandler);
 
@@ -260,9 +260,9 @@ function txErrorHandler(tx) {
 
 
 
-$('.pickadate').pickadate( 
+$('.pickadate').pickadate(
 {
-	format: "dd/mm/yyyy",  
+	format: "dd/mm/yyyy",
 	editable: true
 });
 
@@ -282,20 +282,20 @@ $("body").on("click", ".takephoto", function(){
 		$(".save").removeClass("disabled");
 	}, function(err) {
 		log("Error al acceder a la cámara");
-	}, 
+	},
 	{
 		quality: 65,
 		targetWidth: 320,
 		targetHeight: 320,
 		saveToPhotoAlbum: false,
-		destinationType: Camera.DestinationType.DATA_URL 
+		destinationType: Camera.DestinationType.DATA_URL
 	});
 
 });
 
 
 $("body").on("click", ".takeaudio", function(){
-	var recorder = new Object;    
+	var recorder = new Object;
 	recorder.record = function() {
 		window.plugins.audioRecorderAPI.record(function(msg) {
 
@@ -317,3 +317,14 @@ function log(string){
 $(document).ready(function(){
 	$("#exp_unit").html(localStorage.getItem("campo_numero"));
 });
+
+
+var onSuccess = function(position) {
+  localStorage.setItem('latitude',position.coords.latitude);
+  localStorage.setItem('longitude',position.coords.longitude);
+};
+
+function onError(error) {
+  console.log("GPS Error: " + error.code + " - " + error.message);
+}
+navigator.geolocation.watchPosition(onSuccess, onError, { timeout: 30000 });

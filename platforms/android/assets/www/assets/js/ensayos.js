@@ -1,5 +1,5 @@
 
-db = window.openDatabase("FieldBook", "1.0", "FieldBook", 200000);
+db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
 
 db.transaction(
 	function(tx) {
@@ -8,7 +8,7 @@ db.transaction(
 		sql += " LibroCampo.id = UserLibroCampo.libroCampo AND ";
 		sql += " UserLibroCampo.user = '" + user_id + "'";
 		console.log(sql);
-		tx.executeSql(sql, [], 
+		tx.executeSql(sql, [],
 			function(tx, results) {
 				var len = results.rows.length;
 				i = 0;

@@ -45,6 +45,20 @@ module.exports = [
         "clobbers": [
             "window.plugins.audioRecorderAPI"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-geolocation/www/android/geolocation.js",
+        "id": "cordova-plugin-geolocation.geolocation",
+        "pluginId": "cordova-plugin-geolocation",
+        "clobbers": [
+            "navigator.geolocation"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
+        "id": "cordova-plugin-geolocation.PositionError",
+        "pluginId": "cordova-plugin-geolocation",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -52,7 +66,9 @@ module.exports.metadata =
 {
     "cordova-plugin-whitelist": "1.1.1-dev",
     "org.apache.cordova.camera": "0.3.6",
-    "cordova-plugin-audio-recorder-api": "0.0.1"
+    "cordova-plugin-audio-recorder-api": "0.0.1",
+    "cordova-plugin-compat": "1.0.0",
+    "cordova-plugin-geolocation": "2.2.0"
 }
 // BOTTOM OF METADATA
 });

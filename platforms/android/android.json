@@ -19,6 +19,10 @@
                         {
                             "xml": "<feature name=\"AudioRecorderAPI\"><param name=\"android-package\" value=\"com.emj365.plugins.AudioRecorderAPI\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Geolocation\"><param name=\"android-package\" value=\"org.apache.cordova.geolocation.Geolocation\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -28,6 +32,14 @@
                     "/*": [
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />",
                             "count": 1
                         }
                     ],
@@ -57,6 +69,12 @@
             "PACKAGE_NAME": "manolo.field"
         },
         "cordova-plugin-audio-recorder-api": {
+            "PACKAGE_NAME": "manolo.field"
+        },
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "manolo.field"
+        },
+        "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "manolo.field"
         }
     },
@@ -107,11 +125,27 @@
             "clobbers": [
                 "window.plugins.audioRecorderAPI"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-geolocation/www/android/geolocation.js",
+            "id": "cordova-plugin-geolocation.geolocation",
+            "pluginId": "cordova-plugin-geolocation",
+            "clobbers": [
+                "navigator.geolocation"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
+            "id": "cordova-plugin-geolocation.PositionError",
+            "pluginId": "cordova-plugin-geolocation",
+            "runs": true
         }
     ],
     "plugin_metadata": {
         "cordova-plugin-whitelist": "1.1.1-dev",
         "org.apache.cordova.camera": "0.3.6",
-        "cordova-plugin-audio-recorder-api": "0.0.1"
+        "cordova-plugin-audio-recorder-api": "0.0.1",
+        "cordova-plugin-compat": "1.0.0",
+        "cordova-plugin-geolocation": "2.2.0"
     }
 }

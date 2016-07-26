@@ -1,4 +1,4 @@
-db = window.openDatabase("FieldBook", "1.0", "FieldBook", 200000);
+db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
 
 var pass = {};
 var id = {};
@@ -11,7 +11,7 @@ if(last_email){
 db.transaction(
 	function(tx) {
 		var sql = "SELECT email, pass, id FROM User WHERE 1";
-		tx.executeSql(sql, [], 
+		tx.executeSql(sql, [],
 			function(tx, results) {
 				var len = results.rows.length;
 				for (var i = 0; i < len; i++) {

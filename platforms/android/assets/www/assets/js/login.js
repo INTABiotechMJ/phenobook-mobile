@@ -1,5 +1,5 @@
 
-db = window.openDatabase("FieldBook", "1.0", "FieldBook", 200000);
+db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
 
 var pass = "";
 
@@ -8,7 +8,7 @@ db.transaction(
 		var user_id = localStorage.getItem('user');
 		var sql = "SELECT pass FROM User WHERE ";
 		sql += " id = '" + user_id + "'";
-		tx.executeSql(sql, [], 
+		tx.executeSql(sql, [],
 			function(tx, results) {
 				var len = results.rows.length;
 				var item = results.rows.item(0);
@@ -23,7 +23,7 @@ $(".login").click(function(){
 		$(".alert").html("Please specify an application URL in settings.");
 	}
 	if(md5($("#pass").val()) == pass){
-		window.location.href = "ensayos.html";	
+		window.location.href = "ensayos.html";
 	}else{
 		$(".login").attr("disabled", "disabled");
 		$(".login").addClass("disabled");
