@@ -4,9 +4,9 @@ db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
 db.transaction(
 	function(tx) {
 		var user_id = localStorage.getItem('user');
-		var sql = "SELECT LibroCampo.id, LibroCampo.nombre, LibroCampo.campo_numero FROM LibroCampo, UserLibroCampo WHERE ";
-		sql += " LibroCampo.id = UserLibroCampo.libroCampo AND ";
-		sql += " UserLibroCampo.user = '" + user_id + "'";
+		var sql = "SELECT Phenobook.id, Phenobook.nombre, Phenobook.campo_numero FROM Phenobook, UserPhenobook WHERE ";
+		sql += " Phenobook.id = UserPhenobook.libroCampo AND ";
+		sql += " UserPhenobook.user = '" + user_id + "'";
 		console.log(sql);
 		tx.executeSql(sql, [],
 			function(tx, results) {

@@ -3,9 +3,19 @@ db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
 var pass = {};
 var id = {};
 var last_email = localStorage.getItem('last_email');
+var last_update = localStorage.getItem('last_update');
 
 if(last_email){
 	$("#email").val(last_email);
+}
+if(localStorage.getItem('url') == undefined){
+	localStorage.setItem('http://biotecmj.com.ar');
+}
+
+if(last_update){
+	$(".alert").html("Last update: " + last_update);
+}else{
+	$(".alert").html("Last update: Never");
 }
 
 db.transaction(
@@ -19,16 +29,28 @@ db.transaction(
 					pass[item.email] = item.pass;
 					id[item.email] = item.id;
 				}
-			});
-	});
+			}
+		);
+	}
+);
+
+$("#remember").change(function(){
+	if($(this).is(':checked')){
+		localStorage.setItem('remember_password', true);
+		localStorage.setItem('remembered_password', $("#pass").val());
+	}else{
+		localStorage.setItem('remember_password', false);
+		localStorage.setItem('remembered_password', "");
+	}
+});
 
 function txErrorHandler(tx) {
 	console.log(tx.message);
 }
 
 $(".login").click(function(){
-	if(localStorage.getItem('url') == "" || localStorage.getItem('url') == undefined){
-		$(".alert").html("Please specify an application URL in settings.");
+	if(localStorage.getItem('url') == ""){
+		$(".alert").html("Please specify a sever URL in settings.");
 		return;
 	}
 	if($("#remember").is(':checked')){
@@ -52,6 +74,7 @@ $(".login").click(function(){
 			$(".login").removeClass("disabled");
 		}, 3000)
 	}
+	return false;
 });
 
 function md5(string){
@@ -63,9 +86,9 @@ $(".exit").click(function(){
 });
 
 $("#update-btn").click(function(){
-	if(localStorage.getItem('url') == "" || localStorage.getItem('url') == undefined){
-		$(".alert").html("Please specify an application URL in settings.");
-		return;
+	if(localStorage.getItem('url') == ""){
+		$(".alert").html("Please specify a server URL in settings.");
+		return false;
 	}
 	if($("#remember").is(':checked')){
 		localStorage.setItem('remember_password', true);

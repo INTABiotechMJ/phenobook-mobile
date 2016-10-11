@@ -2,11 +2,13 @@
 	-webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
 
-
 .page{
 	padding: 1em;
 	margin-top: 2em;
 }
+ .main-button-container{
+	 margin-top: 10px;
+ }
 
 .container{
 	padding-top: 2em;
