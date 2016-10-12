@@ -1,0 +1,28 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-audio-recorder-api": {
+            "PACKAGE_NAME": "manolo.field"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "manolo.field"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "manolo.field"
+        },
+        "org.apache.cordova.camera": {
+            "PACKAGE_NAME": "manolo.field"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "manolo.field"
+        }
+    }
+}

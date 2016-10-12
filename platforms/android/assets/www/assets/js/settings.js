@@ -1,8 +1,8 @@
-$("#url").val(localStorage.getItem('url'));
+$("#url").val(localStorage.getItem('phenobook_url'));
 $("#save-btn").click(function(){
-    localStorage.setItem('url', $("#url").val());
-    window.location.href = "../index.html";  
+    localStorage.setItem('phenobook_url', $("#url").val());
+    window.location.href = "../index.html";
 });
 $("#cancel-btn").click(function(){
-    window.location.href = "../index.html";  
+    window.location.href = "../index.html";
 });

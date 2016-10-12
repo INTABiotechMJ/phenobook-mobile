@@ -1,5 +1,6 @@
-db = window.openDatabase("FieldBook1", "1.0", "FieldBook", 200000);
+db = window.openDatabase("phenobook", "1.0", "phenobook", 200000);
 
+var userGroup = {};
 var pass = {};
 var id = {};
 var last_email = localStorage.getItem('last_email');
@@ -8,25 +9,29 @@ var last_update = localStorage.getItem('last_update');
 if(last_email){
 	$("#email").val(last_email);
 }
-if(localStorage.getItem('url') == undefined){
-	localStorage.setItem('http://biotecmj.com.ar');
+if(localStorage.getItem('phenobook_url') == undefined){
+	localStorage.setItem('phenobook_url','http://getphenobook.com/');
 }
 
 if(last_update){
-	$(".alert").html("Last update: " + last_update);
+	var last_update_str = "Last update: " + last_update + " (" + timeSince(last_update) + " ago)";
+	$(".alert").html(last_update_str);
+	$(".login").attr("disabled",false);
 }else{
-	$(".alert").html("Last update: Never");
+	$(".alert").html("Last update: Never. <br>Since this is the first time you access you need to run an update before loggin in");
+	$(".login").attr("disabled","disabled");
 }
 
 db.transaction(
 	function(tx) {
-		var sql = "SELECT email, pass, id FROM User WHERE 1";
+		var sql = "SELECT email, pass, id, userGroup FROM User WHERE 1";
 		tx.executeSql(sql, [],
 			function(tx, results) {
 				var len = results.rows.length;
 				for (var i = 0; i < len; i++) {
 					var item = results.rows.item(i);
 					pass[item.email] = item.pass;
+					userGroup[item.email] = item.userGroup;
 					id[item.email] = item.id;
 				}
 			}
@@ -64,7 +69,8 @@ $(".login").click(function(){
 	localStorage.setItem('last_email', email);
 	if(md5($("#pass").val()) == pass[email]){
 		localStorage.setItem('user', id[email]);
-		window.location.href = "tpl/ensayos.html";
+		localStorage.setItem('userGroup', userGroup[email]);
+		window.location.href = "tpl/phenobooks.html";
 	}else{
 		$(".login").attr("disabled", "disabled");
 		$(".login").addClass("disabled");
@@ -118,4 +124,32 @@ if(remember_password == "true"){
 var remembered_password = localStorage.getItem("remembered_password");
 if(remembered_password){
 	$("#pass").val(remembered_password);
+}
+
+
+
+function timeSince(correctStart) {
+	var date = new Date(correctStart);
+	var seconds = Math.floor((new Date() - date) / 1000);
+	var interval = Math.floor(seconds / 31536000);
+	if (interval > 1) {
+		return interval + " years";
+	}
+	interval = Math.floor(seconds / 2592000);
+	if (interval > 1) {
+		return interval + " months";
+	}
+	interval = Math.floor(seconds / 86400);
+	if (interval > 1) {
+		return interval + " days";
+	}
+	interval = Math.floor(seconds / 3600);
+	if (interval > 1) {
+		return interval + " hours";
+	}
+	interval = Math.floor(seconds / 60);
+	if (interval > 1) {
+		return interval + " minutes";
+	}
+	return Math.floor(seconds) + " seconds";
 }
