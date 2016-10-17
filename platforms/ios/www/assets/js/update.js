@@ -175,7 +175,7 @@ function initDB(callback){
       tx.executeSql(sql);
       sql = "DROP TABLE IF EXISTS Registry";
       tx.executeSql(sql);
-      sql = "DROP TABLE IF EXISTS FieldOption";
+      sql = "DROP TABLE IF EXISTS Category";
       tx.executeSql(sql);
       sql = "DROP TABLE IF EXISTS UserGroup";
       tx.executeSql(sql);
@@ -206,7 +206,7 @@ function initDB(callback){
 
       tx.executeSql(sql);
 
-      sql = "CREATE TABLE IF NOT EXISTS FieldOption ( " +
+      sql = "CREATE TABLE IF NOT EXISTS Category ( " +
       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
       "name VARCHAR(100), " +
       "variable INTEGER, " +
@@ -342,7 +342,7 @@ function initDB(callback){
         function(tx) {
           var l = items.length;
           log("Downloading " + l + " option/s");
-          var sql = " INSERT OR REPLACE INTO FieldOption " +
+          var sql = " INSERT OR REPLACE INTO Category " +
           " (id, name, variable, defaultValue) " +
           " VALUES (?, ?, ?, ?) ";
           var e;

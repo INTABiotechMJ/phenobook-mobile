@@ -1,2 +1,3 @@
 platforms/android/*
 *.DS_Store
+manolo.keystore

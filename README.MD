@@ -1,3 +1,9 @@
+
+Phenotypic data collection tool
+
+Check our [online documentation)[https://intabiotechmj.github.io/phenobook-server/)
+to learn more. 
+
 To build android app:
 
 ANDROID_HOME=/Users/juan/Documents/manu/dev/android-sdk-macosx

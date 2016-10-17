@@ -13,8 +13,14 @@ if(localStorage.getItem('phenobook_url') == undefined){
 	localStorage.setItem('phenobook_url','http://getphenobook.com/');
 }
 
+
 if(last_update){
-	var last_update_str = "Last update: " + last_update + " (" + timeSince(last_update) + " ago)";
+	var time_since = timeSince(last_update);
+	if(time_since == "just now"){
+		var last_update_str = "Last update: " + last_update + " (" + time_since + ")";
+	}else{
+		var last_update_str = "Last update: " + last_update + " (" + time_since + " ago)";
+	}
 	$(".alert").html(last_update_str);
 	$(".login").attr("disabled",false);
 }else{
@@ -129,7 +135,8 @@ if(remembered_password){
 
 
 function timeSince(correctStart) {
-	var date = new Date(correctStart);
+	var date = Date.parseExact(correctStart, "yyyy-MM-dd HH:mm:ss");
+	//var date = new Date(correctStart);
 	var seconds = Math.floor((new Date() - date) / 1000);
 	var interval = Math.floor(seconds / 31536000);
 	if (interval > 1) {
@@ -150,6 +157,9 @@ function timeSince(correctStart) {
 	interval = Math.floor(seconds / 60);
 	if (interval > 1) {
 		return interval + " minutes";
+	}
+	if(seconds < 10){
+		return "just now";
 	}
 	return Math.floor(seconds) + " seconds";
 }

@@ -18,7 +18,8 @@ function upload(callback){
     function(tx) {
       sql = "CREATE TABLE IF NOT EXISTS Variable ( " +
       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-      "variableGroup VARCHAR(100), " +
+      "isInformative INTEGER, " +
+      "userGroup INTEGER, " +
       "name VARCHAR(100), " +
       "defaultValue VARCHAR(100), " +
       "required INTEGER, " +
@@ -114,7 +115,7 @@ function exporting(){
   $.ajax({
     dataType: "json",
     type: "POST",
-    url: __URL + "export-variableGroups.php",
+    url: __URL + "export-phenobookVariables.php",
     data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
@@ -169,13 +170,13 @@ function initDB(callback){
       tx.executeSql(sql);
       sql = "DROP TABLE IF EXISTS Phenobook";
       tx.executeSql(sql);
-      sql = "DROP TABLE IF EXISTS VariableGroup";
+      sql = "DROP TABLE IF EXISTS PhenobookVariable";
       tx.executeSql(sql);
       sql = "DROP TABLE IF EXISTS Variable";
       tx.executeSql(sql);
       sql = "DROP TABLE IF EXISTS Registry";
       tx.executeSql(sql);
-      sql = "DROP TABLE IF EXISTS FieldOption";
+      sql = "DROP TABLE IF EXISTS Category";
       tx.executeSql(sql);
       sql = "DROP TABLE IF EXISTS UserGroup";
       tx.executeSql(sql);
@@ -189,7 +190,6 @@ function initDB(callback){
       sql = "CREATE TABLE IF NOT EXISTS Phenobook ( " +
       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
       "name VARCHAR(100), " +
-      "variableGroup INTEGER, " +
       "userGroup INTEGER, " +
       "experimental_units_number VARCHAR(100), " +
       "description VARCHAR(50)) ";
@@ -197,7 +197,8 @@ function initDB(callback){
 
       sql = "CREATE TABLE IF NOT EXISTS Variable ( " +
       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-      "variableGroup INTEGER, " +
+      "isInformative INTEGER, " +
+      "userGroup INTEGER, " +
       "name VARCHAR(100), " +
       "defaultValue VARCHAR(100), " +
       "required INTEGER, " +
@@ -206,7 +207,7 @@ function initDB(callback){
 
       tx.executeSql(sql);
 
-      sql = "CREATE TABLE IF NOT EXISTS FieldOption ( " +
+      sql = "CREATE TABLE IF NOT EXISTS Category ( " +
       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
       "name VARCHAR(100), " +
       "variable INTEGER, " +
@@ -230,20 +231,21 @@ function initDB(callback){
       "latitude VARCHAR(100), " +
       "longitude VARCHAR(100)) "
       tx.executeSql(sql);
+
       sql = "CREATE TABLE IF NOT EXISTS UserGroup ( " +
       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
       "name INTEGER) "
       tx.executeSql(sql);
 
-      sql = "CREATE TABLE IF NOT EXISTS VariableGroup ( " +
+      sql = "CREATE TABLE IF NOT EXISTS PhenobookVariable ( " +
       "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-      "name INTEGER, " +
-      "userGroup INTEGER) "
+      "phenobook INTEGER, " +
+      "variable INTEGER) "
 
       tx.executeSql(sql);
 
 
-    }, txErrorHandler,function(tx,sql) {
+    }, null,function(tx,sql) {
       callback();
     });
   }
@@ -264,7 +266,7 @@ function initDB(callback){
           tx.executeSql(sql, params);
         }
       },
-      txErrorHandler,
+      null,
       function(tx,sql) {
         callback();
       });
@@ -276,16 +278,16 @@ function initDB(callback){
           var l = items.length;
           log("Downloading " + l + " phenobooks/s");
           var sql = " INSERT OR REPLACE INTO Phenobook " +
-          " (id, name, experimental_units_number, description, userGroup, variableGroup) " +
-          " VALUES (?,?,?,?,?,?) ";
+          " (id, name, experimental_units_number, description, userGroup) " +
+          " VALUES (?,?,?,?,?) ";
           var e;
           for (var i = 0; i < l; i++) {
             e = items[i];
-            var params = [e.id, e.name, e.experimental_units_number, e.description, e.userGroup.id, e.variableGroup.id];
+            var params = [e.id, e.name, e.experimental_units_number, e.description, e.userGroup.id];
             tx.executeSql(sql, params);
           }
         },
-        txErrorHandler,
+        null,
         function(tx,sql) {
           callback();
         }
@@ -298,16 +300,16 @@ function initDB(callback){
           var l = items.length;
           log("Downloading " + l + " variable/s");
           var sql = " INSERT OR REPLACE INTO Variable " +
-          " (id, name, variableGroup, defaultValue, required, description, fieldType) " +
-          " VALUES (?, ?, ?, ?, ?, ?, ?) ";
+          " (id, name, userGroup, isInformative, defaultValue, required, description, fieldType) " +
+          " VALUES (?, ?, ?, ?, ?, ?, ?, ?) ";
           var e;
           for (var i = 0; i < l; i++) {
             e = items[i];
-            var params = [e.id, e.name, e.variableGroup.id, e.defaultValue, e.required, e.description, e.fieldType.type];
+            var params = [e.id, e.name, e.userGroup.id, e.isInformative, e.defaultValue, e.required, e.description, e.fieldType.type];
             tx.executeSql(sql, params);
           }
         },
-        txErrorHandler,
+        null,
         function(tx,sql) {
           callback();
         }
@@ -330,7 +332,7 @@ function initDB(callback){
             tx.executeSql(sql, params);
           }
         },
-        txErrorHandler,
+        null,
         function(tx,sql) {
           callback();
         }
@@ -342,7 +344,7 @@ function initDB(callback){
         function(tx) {
           var l = items.length;
           log("Downloading " + l + " option/s");
-          var sql = " INSERT OR REPLACE INTO FieldOption " +
+          var sql = " INSERT OR REPLACE INTO Category " +
           " (id, name, variable, defaultValue) " +
           " VALUES (?, ?, ?, ?) ";
           var e;
@@ -352,7 +354,7 @@ function initDB(callback){
             tx.executeSql(sql, params);
           }
         },
-        txErrorHandler,
+        null,
         function(tx,sql) {
           callback();
         }
@@ -363,17 +365,17 @@ function initDB(callback){
         function(tx) {
           var l = items.length;
           log("Downloading " + l + " variable group/s");
-          var sql = " INSERT OR REPLACE INTO VariableGroup " +
-          " (id, name, userGroup) " +
+          var sql = " INSERT OR REPLACE INTO PhenobookVariable " +
+          " (id, variable, phenobook) " +
           " VALUES (?, ?, ?) ";
           var e;
           for (var i = 0; i < l; i++) {
             e = items[i];
-            var params = [e.id, e.name, e.userGroup.id];
+            var params = [e.id, e.variable.id,e.phenobook.id];
             tx.executeSql(sql, params);
           }
         },
-        txErrorHandler,
+        null,
         function(tx,sql) {
           callback();
         }
@@ -394,7 +396,7 @@ function initDB(callback){
             tx.executeSql(sql, params);
           }
         },
-        txErrorHandler,
+        null,
         function(tx,sql) {
           callback();
         }

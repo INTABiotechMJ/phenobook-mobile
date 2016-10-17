@@ -1,6 +1,9 @@
 db = window.openDatabase("phenobook", "1.0", "phenobook", 200000);
 var INFORMATIVE_TYPE = 12;
 var options = [];
+var phenobook = localStorage.getItem('phenobook');
+var phenobook_name = localStorage.getItem('phenobook_name');
+$("#phenobook_name").html(phenobook_name);
 db.transaction(
 	function(tx) {
 		// all variables for fieldtype except informative
@@ -12,7 +15,7 @@ db.transaction(
 				for (; i < len; i = i + 1) {
 					var item = results.rows.item(i);
 					$("#variable").append("<option value='" + item.id + "' data-fieldtype='" + item.fieldType + "'>" +  item.name + "</option>");
-					var sql = "SELECT * FROM FieldOption WHERE variable = '" + item.id + "'";
+					var sql = "SELECT * FROM Category WHERE variable = '" + item.id + "'";
 					tx.executeSql(sql, [],
 						function(tx, results) {
 							var len = results.rows.length;
@@ -98,6 +101,13 @@ $("#variable").change(function(){
 	return false;
 });
 
+$("#exp_unit").change(function(){
+	save(function (){
+		updateValue();
+	});
+	return false;
+});
+
 var changed = false;
 var tout;
 function save(callback){
@@ -126,8 +136,8 @@ function save(callback){
 		function(tx) {
 			var sql = " UPDATE Registry SET" +
 			" status = '0' " +
-			" WHERE experimental_unit_number = ? AND variable = ? ";
-			var params = [exp_unit, variable];
+			" WHERE experimental_unit_number = ? AND variable = ? AND phenobook = ?";
+			var params = [exp_unit, variable, phenobook];
 			tx.executeSql(sql, params);
 
 			var sql = " INSERT INTO Registry " +
@@ -164,7 +174,7 @@ function updateValue(){
 	$(".preview").attr("src", "");
 	db.transaction(
 		function(tx) {
-			var sql = "SELECT Registry.fixed, Registry.value, Registry.updated, Variable.fieldType FROM Registry, Variable WHERE Registry.status = '1' AND Registry.variable = Variable.id AND experimental_unit_number = '" + exp_unit + "' AND variable = '" + variable + "'";
+			var sql = "SELECT Registry.fixed, Registry.value, Registry.updated, Variable.fieldType FROM Registry, Variable WHERE Registry.status = '1' AND Registry.variable = Variable.id AND experimental_unit_number = '" + exp_unit + "' AND variable = '" + variable + "' AND phenobook = '" + phenobook + "'";
 
 			tx.executeSql(sql, [],
 				function(tx, results) {
@@ -207,7 +217,7 @@ function updateValue(){
 					}
 				}
 			);
-			var sql = "SELECT Registry.value, Registry.updated, Variable.fieldType, Variable.name FROM Registry, Variable WHERE Registry.status = '1' AND Registry.variable = Variable.id AND experimental_unit_number = '" + exp_unit + "' AND Variable.fieldType = '" + INFORMATIVE_TYPE + "'";
+			var sql = "SELECT Registry.value, Registry.updated, Variable.fieldType, Variable.name FROM Registry, Variable WHERE Registry.phenobook = '" + phenobook + "' AND Registry.status = '1' AND Registry.variable = Variable.id AND experimental_unit_number = '" + exp_unit + "' AND Variable.fieldType = '" + INFORMATIVE_TYPE + "'";
 			var items = new Array();
 			tx.executeSql(sql, [],
 				function(tx, results) {
