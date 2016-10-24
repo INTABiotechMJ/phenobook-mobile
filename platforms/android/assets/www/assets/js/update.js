@@ -1,6 +1,6 @@
 db = window.openDatabase("phenobook", "1.0", "phenobook", 200000);
 
-var __URL = localStorage.getItem('phenobook_url')+"files/php/scripts/app/";
+var __URL = localStorage.getItem('phenobook_url')+"api/";
 
 local = false;
 if(!local){
