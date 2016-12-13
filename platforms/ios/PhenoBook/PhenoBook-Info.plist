@@ -21,11 +21,11 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.0.5</string>
+    <string>0.0.12</string>
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleVersion</key>
-    <string>0.0.5</string>
+    <string>0.0.12</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSMainNibFile</key>
@@ -54,5 +54,9 @@
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Take photos of the experimental unit</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Access taken photos to upload to the server</string>
   </dict>
 </plist>

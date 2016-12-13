@@ -7,7 +7,7 @@ $("#phenobook_name").html(phenobook_name);
 db.transaction(
 	function(tx) {
 		// all variables for fieldtype except informative
-		var sql = "SELECT id, name, fieldType FROM Variable WHERE variableGroup = '" + localStorage.getItem('variablegroup') + "' AND fieldType != '" + INFORMATIVE_TYPE + "'";
+		var sql = "SELECT id, name, fieldType FROM Variable WHERE id IN (SELECT variable FROM PhenobookVariable WHERE phenobook = '" + phenobook + "') AND NOT isInformative";
 		tx.executeSql(sql, [],
 			function(tx, results) {
 				var len = results.rows.length;
@@ -23,6 +23,7 @@ db.transaction(
 								var option = results.rows.item(i);
 								options.push(option);
 							}
+							$("#variable").trigger("change");
 						}
 					);
 				}
@@ -217,7 +218,7 @@ function updateValue(){
 					}
 				}
 			);
-			var sql = "SELECT Registry.value, Registry.updated, Variable.fieldType, Variable.name FROM Registry, Variable WHERE Registry.phenobook = '" + phenobook + "' AND Registry.status = '1' AND Registry.variable = Variable.id AND experimental_unit_number = '" + exp_unit + "' AND Variable.fieldType = '" + INFORMATIVE_TYPE + "'";
+			var sql = "SELECT Registry.value, Registry.updated, Variable.fieldType, Variable.name FROM Registry, Variable WHERE Registry.phenobook = '" + phenobook + "' AND Registry.status = '1' AND Registry.variable = Variable.id AND experimental_unit_number = '" + exp_unit + "' AND isInformative";
 			var items = new Array();
 			tx.executeSql(sql, [],
 				function(tx, results) {

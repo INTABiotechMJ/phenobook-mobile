@@ -97,16 +97,17 @@ function exporting(){
     dataType: "json",
     type: "POST",
     url: __URL + "export-users.php",
-    data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
+    data: {from_app:1, email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
     updateUsers(data, function(){});
   });
+
   $.ajax({
     dataType: "json",
     type: "POST",
     url: __URL + "export-phenobooks.php",
-    data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
+    data: {from_app:1, email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
     updatePhenobooks(data, function(){});
@@ -116,7 +117,7 @@ function exporting(){
     dataType: "json",
     type: "POST",
     url: __URL + "export-phenobookVariables.php",
-    data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
+    data: {from_app:1, email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
     updateVariableGroups(data, function(){});
@@ -126,7 +127,7 @@ function exporting(){
     dataType: "json",
     type: "POST",
     url: __URL + "export-variables.php",
-    data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
+    data: {from_app:1, email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
     updateVariables(data, function(){});
@@ -136,7 +137,7 @@ function exporting(){
     dataType: "json",
     type: "POST",
     url: __URL + "export-options.php",
-    data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
+    data: {from_app:1, email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
     updateOptions(data, function(){});
@@ -146,7 +147,7 @@ function exporting(){
     dataType: "json",
     type: "POST",
     url: __URL + "export-registries.php",
-    data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
+    data: {from_app:1, email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
     updateRegistries(data, function(){});
@@ -157,7 +158,7 @@ function exporting(){
     dataType: "json",
     type: "POST",
     url: __URL + "export-userGroups.php",
-    data: {email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
+    data: {from_app:1, email: localStorage.getItem("last_email"), pass: localStorage.getItem('last_pass') },
   })
   .done(function( data ) {
     updateUserGroups(data, function(){});
@@ -364,7 +365,7 @@ function initDB(callback){
       db.transaction(
         function(tx) {
           var l = items.length;
-          log("Downloading " + l + " variable group/s");
+          log("Downloading " + l + " variables/phenobooks association");
           var sql = " INSERT OR REPLACE INTO PhenobookVariable " +
           " (id, variable, phenobook) " +
           " VALUES (?, ?, ?) ";

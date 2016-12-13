@@ -5,7 +5,6 @@ var OPTION_TYPE = 2;
 var CHECK_TYPE = 3;
 
 var phenobook = localStorage.getItem('phenobook');
-var variablegroup = localStorage.getItem('variablegroup');
 var exp_units = localStorage.getItem('exp_units');
 var phenobook_name = localStorage.getItem('phenobook_name');
 $("#phenobook_name").html(phenobook_name);
@@ -16,7 +15,7 @@ var vars_type = [];
 var regs = {};
 db.transaction(
 	function(tx) {
-		var sql = "SELECT Variable.id, Variable.name, Variable.fieldType FROM Variable WHERE variablegroup = '" + variablegroup + "' AND fieldType = '" + INFORMATIVE_TYPE + "'";
+		var sql = "SELECT Variable.id, Variable.name, Variable.fieldType FROM Variable WHERE id IN (SELECT variable FROM PhenobookVariable WHERE phenobook = '" + phenobook + "') AND isInformative";
 		tx.executeSql(sql, [],
 			function(tx, results) {
 				var len = results.rows.length;
@@ -36,7 +35,7 @@ db.transaction(
 							opts[res.variable + "_" + res.id] = res.name
 						}
 
-						var sql = "SELECT Variable.name, Variable.id, Variable.fieldType FROM Variable WHERE variablegroup = '" + variablegroup + "' AND fieldType != '" + INFORMATIVE_TYPE + "'";
+						var sql = "SELECT Variable.id, Variable.name, Variable.fieldType FROM Variable WHERE id IN (SELECT variable FROM PhenobookVariable WHERE phenobook = '" + phenobook + "') AND NOT isInformative";
 						tx.executeSql(sql, [],
 							function(tx, results) {
 								var len = results.rows.length;
@@ -49,8 +48,8 @@ db.transaction(
 
 								for (var i = 0; i < vars.length; i++) {
 									var curr_var = vars[i];
-									for (var eu = 1; eu <= exp_units ; eu++) {
-										var sql = "SELECT Registry.value, Registry.experimental_unit_number, Registry.variable FROM Registry WHERE Registry.phenobook = '" + phenobook + "' AND Registry.status = '1' AND variable = '" + curr_var + "' AND experimental_unit_number = '" + eu + "'";
+								//	for (var eu = 1; eu <= exp_units ; eu++) {
+										var sql = "SELECT Registry.value, Registry.experimental_unit_number, Registry.variable FROM Registry WHERE Registry.phenobook = '" + phenobook + "' AND Registry.status = '1' AND variable = '" + curr_var + "' ";
 										tx.executeSql(sql, [],
 											function(tx, results) {
 												var len = results.rows.length;
@@ -61,7 +60,7 @@ db.transaction(
 												updateTable();
 											}
 										);
-									}
+									//}
 								}
 							}
 						);

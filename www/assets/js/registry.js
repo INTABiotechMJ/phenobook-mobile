@@ -23,6 +23,7 @@ db.transaction(
 								var option = results.rows.item(i);
 								options.push(option);
 							}
+							$("#variable").trigger("change");
 						}
 					);
 				}

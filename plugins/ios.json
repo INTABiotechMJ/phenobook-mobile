@@ -16,7 +16,9 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "manolo.field"
         },
-        "org.apache.cordova.camera": {
+        "cordova-plugin-camera": {
+            "CAMERA_USAGE_DESCRIPTION": "take photos of the experimental unit",
+            "PHOTOLIBRARY_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "manolo.field"
         }
     },
