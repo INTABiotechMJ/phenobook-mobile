@@ -372,8 +372,10 @@ function initDB(callback){
           var e;
           for (var i = 0; i < l; i++) {
             e = items[i];
-            var params = [e.id, e.variable.id,e.phenobook.id];
-            tx.executeSql(sql, params);
+            if(e.variable != null){    
+              var params = [e.id, e.variable.id,e.phenobook.id];
+              tx.executeSql(sql, params);
+            }
           }
         },
         null,
