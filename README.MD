@@ -1,7 +1,9 @@
 
 Phenotypic data collection tool
 
-Check our [online documentation)[https://intabiotechmj.github.io/phenobook-server/)
+Ready to go iOS app: https://itunes.apple.com/us/app/phenobook/id1170632297?ls=1&mt=8
+
+Check our online documentation https://intabiotechmj.github.io/phenobook-server/
 to learn more.
 
 To build android app:
